@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./styles.css";
+import { InputTodo } from "./components/InputTodo";
+import { ImcompleteTodo } from "./components/ImcompleteTodo";
+import { CompleteTodo } from "./components/CompleteTodo";
 
 export const App = () => {
   const [todoText, setTodoText] = useState("");
@@ -36,42 +39,23 @@ export const App = () => {
   };
   return (
     <>
-      <div className="input-area">
-        <input
-          type="text"
-          placeholder="TODOを入力"
-          value={todoText}
-          onChange={onChangeTodoText}
-        />
-        <button onClick={onClickAdd}>追加</button>
-      </div>
-      <div className="imcomplete-area">
-        <p className="title">未完了のTOOD</p>
-        <ul id="imcomplete-list">
-          {imcompleteTodos.map((todo, index) => {
-            return (
-              <li key={todo}>
-                <p>{todo}</p>
-                <button onClick={() => onCLickComplete(index)}>完了</button>
-                <button onClick={() => onClickDelete(index)}>削除</button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <div className="complete-area">
-        <p className="title">完了のTOOD</p>
-        <ul id="complete-list">
-          {completeTodos.map((todo, index) => {
-            return (
-              <li key={todo}>
-                <p>{todo}</p>
-                <button onClick={() => onClickBack(index)}>戻す</button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChange={onChangeTodoText}
+        onClick={onClickAdd}
+        disabled={imcompleteTodos.length >= 5}
+      />
+      {imcompleteTodos.length >= 5 && (
+        <p style={{ color: "red" }}>
+          登録できるtodoは5個までです。消化しましょう。
+        </p>
+      )}
+      <ImcompleteTodo
+        todos={imcompleteTodos}
+        onClickComplete={onCLickComplete}
+        onClickDelete={onClickDelete}
+      />
+      <CompleteTodo todos={completeTodos} onClickBack={onClickBack} />
     </>
   );
 };
